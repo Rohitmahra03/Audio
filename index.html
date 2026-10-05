@@ -1,0 +1,464 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SunoBooks - Audio Library</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --bg:#f5f6fc;
+  --card:#ffffff;
+  --text:#17182c;
+  --muted:#77798e;
+  --primary:#7455ee;
+  --border:#e9e8f2;
+}
+.dark {
+  --bg:#10111e;
+  --card:#1c1d30;
+  --text:#ffffff;
+  --muted:#aaaabd;
+  --border:#303149;
+}
+* {box-sizing:border-box;margin:0;padding:0}
+body {
+  font-family:Poppins,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  transition:.3s;
+}
+button,input,select {font:inherit}
+button {cursor:pointer;border:0}
+header {
+  display:flex;justify-content:space-between;align-items:center;
+  padding:20px 6%;background:var(--card);
+  border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:10;
+}
+.logo {font-size:25px;font-weight:800;color:var(--primary)}
+.logo span {color:var(--text)}
+.nav {display:flex;gap:25px;align-items:center}
+.nav a {text-decoration:none;color:var(--muted);font-size:14px}
+.theme {
+  background:var(--bg);color:var(--text);
+  padding:10px 14px;border-radius:12px;
+}
+.hero {
+  margin:35px 6%;padding:55px;
+  border-radius:25px;
+  background:linear-gradient(120deg,#7051ed,#a56af7,#e18acb);
+  color:white;display:flex;justify-content:space-between;
+  align-items:center;gap:20px;overflow:hidden;
+}
+.hero h1 {font-size:clamp(27px,4vw,43px);line-height:1.3}
+.hero p {margin:15px 0 25px;color:#f2eaff}
+.hero button {
+  background:white;color:#7152e8;padding:13px 23px;
+  border-radius:12px;font-weight:700;
+}
+.hero-art {font-size:110px}
+.container {padding:10px 6% 140px}
+.section-title {
+  display:flex;justify-content:space-between;
+  align-items:center;margin:30px 0 18px;
+}
+.section-title h2 {font-size:22px}
+.section-title span {color:var(--muted);font-size:13px}
+.search {
+  width:100%;padding:15px 20px;border:1px solid var(--border);
+  border-radius:14px;background:var(--card);
+  color:var(--text);outline:none;margin:15px 0;
+}
+.categories {display:flex;gap:10px;flex-wrap:wrap}
+.cat {
+  padding:10px 17px;border-radius:30px;
+  background:var(--card);color:var(--muted);
+  border:1px solid var(--border);
+}
+.cat.active {background:var(--primary);color:white}
+.books {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(190px,1fr));
+  gap:22px;
+}
+.book {
+  background:var(--card);border:1px solid var(--border);
+  padding:13px;border-radius:18px;
+  transition:.25s;position:relative;
+}
+.book:hover {transform:translateY(-5px)}
+.cover {
+  height:190px;border-radius:13px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:65px;color:white;
+}
+.cover1 {background:linear-gradient(135deg,#273c75,#6c5ce7)}
+.cover2 {background:linear-gradient(135deg,#e17055,#fdcb6e)}
+.cover3 {background:linear-gradient(135deg,#11998e,#38ef7d)}
+.cover4 {background:linear-gradient(135deg,#654ea3,#eaafc8)}
+.cover5 {background:linear-gradient(135deg,#141e30,#516395)}
+.cover6 {background:linear-gradient(135deg,#ff758c,#ff7eb3)}
+.book h3 {font-size:15px;margin-top:13px}
+.book p {font-size:12px;color:var(--muted);margin-top:5px}
+.book-bottom {
+  display:flex;justify-content:space-between;
+  align-items:center;margin-top:13px;
+}
+.play-btn {
+  background:var(--primary);color:white;
+  padding:9px 15px;border-radius:10px;
+}
+.heart {
+  background:transparent;color:#ff5c83;font-size:22px;
+}
+.empty {padding:30px;color:var(--muted);text-align:center}
+.player {
+  position:fixed;bottom:0;left:0;width:100%;
+  background:var(--card);border-top:1px solid var(--border);
+  padding:14px 5%;z-index:20;
+  display:flex;align-items:center;gap:22px;
+}
+.player-info {display:flex;align-items:center;gap:12px;min-width:190px}
+.player-cover {
+  width:48px;height:48px;background:var(--primary);
+  border-radius:10px;display:grid;place-items:center;
+  font-size:23px;color:white;
+}
+.player-info h4 {font-size:13px}
+.player-info p {font-size:11px;color:var(--muted)}
+.controls {flex:1;text-align:center}
+.control-buttons {display:flex;justify-content:center;gap:20px;align-items:center}
+.control-buttons button {background:none;color:var(--text);font-size:19px}
+.control-buttons .main-play {
+  background:var(--primary);color:white;
+  width:38px;height:38px;border-radius:50%;
+}
+.progress-row {display:flex;gap:10px;align-items:center;margin-top:8px}
+.progress-row span {font-size:10px;color:var(--muted)}
+input[type=range] {accent-color:var(--primary);flex:1}
+.player-options {display:flex;gap:12px;align-items:center}
+.player-options select {
+  padding:8px;border-radius:9px;background:var(--bg);
+  color:var(--text);border:1px solid var(--border);
+}
+.upload {
+  background:var(--primary);color:white;
+  padding:10px 14px;border-radius:10px;font-size:12px;
+}
+footer {text-align:center;color:var(--muted);padding:25px}
+@media(max-width:700px) {
+  header {padding:15px 5%}
+  .nav a {display:none}
+  .hero {margin:20px 4%;padding:30px 22px}
+  .hero-art {font-size:65px}
+  .container {padding:10px 4% 170px}
+  .books {grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .cover {height:145px}
+  .book {padding:9px}
+  .player {gap:8px;padding:12px 10px;flex-wrap:wrap}
+  .player-info {min-width:0;flex:1}
+  .player-options {width:100%;justify-content:center}
+  .controls {order:3;flex-basis:100%}
+  .player-info h4 {max-width:140px;overflow:hidden}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">🎧 Suno<span>Books</span></div>
+  <nav class="nav">
+    <a href="#home">Home</a>
+    <a href="#library">Library</a>
+    <a href="#favorites">Favorites</a>
+  </nav>
+  <button class="theme" onclick="toggleTheme()">🌙 Theme</button>
+</header>
+
+<section class="hero" id="home">
+  <div>
+    <h1>Read Less.<br>Listen More. 🎧</h1>
+    <p>Discover thousands of stories, knowledge and ideas through audio.</p>
+    <button onclick="document.getElementById('library').scrollIntoView({behavior:'smooth'})">
+      Explore Library →
+    </button>
+  </div>
+  <div class="hero-art">📚</div>
+</section>
+
+<main class="container" id="library">
+
+  <div class="section-title">
+    <h2>Explore Library</h2>
+    <span id="bookCount">6 Books</span>
+  </div>
+
+  <input class="search" id="search"
+    placeholder="🔍 Search books, authors or categories..."
+    oninput="renderBooks()">
+
+  <div class="categories" id="categories">
+    <button class="cat active" onclick="setCategory('All',this)">All</button>
+    <button class="cat" onclick="setCategory('History',this)">🏛 History</button>
+    <button class="cat" onclick="setCategory('GK',this)">🧠 GK</button>
+    <button class="cat" onclick="setCategory('Stories',this)">📖 Stories</button>
+    <button class="cat" onclick="setCategory('Education',this)">🎓 Education</button>
+    <button class="cat" onclick="setCategory('Biography',this)">👤 Biography</button>
+  </div>
+
+  <div class="section-title">
+    <h2>Popular Audiobooks</h2>
+    <span>Discover something new</span>
+  </div>
+
+  <div class="books" id="bookList"></div>
+
+  <div class="section-title" id="favorites">
+    <h2>❤️ Your Favorites</h2>
+  </div>
+  <div class="books" id="favoriteList"></div>
+
+  <div class="section-title">
+    <h2>📂 Add Your Own Audiobook</h2>
+  </div>
+  <p style="color:var(--muted);font-size:13px;margin-bottom:15px">
+    Upload an MP3 file from your device to listen to it.
+  </p>
+  <input type="file" id="uploadFile" accept="audio/*" class="search">
+
+</main>
+
+<footer>
+  © 2026 SunoBooks | Your World of Audio Knowledge 🎧
+</footer>
+
+<div class="player">
+  <div class="player-info">
+    <div class="player-cover" id="playerCover">🎧</div>
+    <div>
+      <h4 id="playerTitle">Select a Book</h4>
+      <p id="playerAuthor">SunoBooks Library</p>
+    </div>
+  </div>
+
+  <div class="controls">
+    <div class="control-buttons">
+      <button onclick="skip(-10)">↶10</button>
+      <button class="main-play" id="playButton" onclick="togglePlay()">▶</button>
+      <button onclick="skip(10)">10↷</button>
+    </div>
+    <div class="progress-row">
+      <span id="currentTime">0:00</span>
+      <input type="range" id="progress" value="0" min="0" max="100"
+        oninput="seekAudio(this.value)">
+      <span id="duration">0:00</span>
+    </div>
+  </div>
+
+  <div class="player-options">
+    <select id="speed" onchange="audio.playbackRate=Number(this.value)">
+      <option value="0.5">0.5x</option>
+      <option value="0.75">0.75x</option>
+      <option value="1" selected>1x</option>
+      <option value="1.25">1.25x</option>
+      <option value="1.5">1.5x</option>
+      <option value="2">2x</option>
+    </select>
+    <button class="upload" onclick="document.getElementById('uploadFile').click()">
+      + MP3
+    </button>
+    <button onclick="sleepTimer()" title="Sleep Timer">⏰</button>
+  </div>
+</div>
+
+<audio id="audio"></audio>
+
+<script>
+const books = [
+ {id:1,title:"भारत का इतिहास",author:"Indian History",category:"History",emoji:"🏛",cover:"cover1"},
+ {id:2,title:"भारत सामान्य ज्ञान",author:"GK Collection",category:"GK",emoji:"🇮🇳",cover:"cover2"},
+ {id:3,title:"प्रेरणादायक कहानियाँ",author:"Story Collection",category:"Stories",emoji:"📖",cover:"cover3"},
+ {id:4,title:"महान भारतीय व्यक्तित्व",author:"Biography Series",category:"Biography",emoji:"👤",cover:"cover4"},
+ {id:5,title:"विज्ञान की दुनिया",author:"Education Series",category:"Education",emoji:"🔬",cover:"cover5"},
+ {id:6,title:"बच्चों की रोचक कहानियाँ",author:"Kids Library",category:"Stories",emoji:"🦁",cover:"cover6"}
+];
+
+let category="All";
+let currentBook=null;
+let favorites=JSON.parse(localStorage.getItem("favorites")||"[]");
+let audio=document.getElementById("audio");
+
+function renderBooks() {
+ const q=document.getElementById("search").value.toLowerCase();
+ const filtered=books.filter(b=>
+   (category==="All"||b.category===category) &&
+   (b.title.toLowerCase().includes(q)||
+    b.author.toLowerCase().includes(q)||
+    b.category.toLowerCase().includes(q))
+ );
+ document.getElementById("bookCount").innerText=filtered.length+" Books";
+
+ document.getElementById("bookList").innerHTML=filtered.map(b=>card(b)).join("") ||
+ '<div class="empty">No books found.</div>';
+
+ let favBooks=books.filter(b=>favorites.includes(b.id));
+ document.getElementById("favoriteList").innerHTML=
+ favBooks.map(b=>card(b)).join("") ||
+ '<div class="empty">No favorites added yet ❤️</div>';
+}
+
+function card(b) {
+ return `
+ <div class="book">
+  <div class="cover ${b.cover}">${b.emoji}</div>
+  <h3>${b.title}</h3>
+  <p>${b.author} · ${b.category}</p>
+  <div class="book-bottom">
+   <button class="play-btn" onclick="playBook(${b.id})">▶ Listen</button>
+   <button class="heart" onclick="favorite(${b.id})">
+    ${favorites.includes(b.id)?"♥":"♡"}
+   </button>
+  </div>
+ </div>`;
+}
+
+function setCategory(cat,btn) {
+ category=cat;
+ document.querySelectorAll(".cat").forEach(x=>x.classList.remove("active"));
+ btn.classList.add("active");
+ renderBooks();
+}
+
+function favorite(id) {
+ if(favorites.includes(id))
+  favorites=favorites.filter(x=>x!==id);
+ else favorites.push(id);
+
+ localStorage.setItem("favorites",JSON.stringify(favorites));
+ renderBooks();
+}
+
+function playBook(id) {
+ const book=books.find(b=>b.id===id);
+ currentBook=book;
+ document.getElementById("playerTitle").innerText=book.title;
+ document.getElementById("playerAuthor").innerText=book.author;
+ document.getElementById("playerCover").innerText=book.emoji;
+
+ if(!book.audioUrl) {
+   document.getElementById("uploadFile").click();
+   return;
+ }
+ audio.src=book.audioUrl;
+ audio.play().catch(()=>alert("Audio play nahi ho paya."));
+ document.getElementById("playButton").innerText="Ⅱ";
+}
+
+function togglePlay() {
+ if(!audio.src) {
+   alert("पहले MP3 audio upload करें।");
+   return;
+ }
+ if(audio.paused) {
+  audio.play();
+  document.getElementById("playButton").innerText="Ⅱ";
+ } else {
+  audio.pause();
+  document.getElementById("playButton").innerText="▶";
+ }
+}
+
+function skip(seconds) {
+ audio.currentTime=Math.max(0,audio.currentTime+seconds);
+}
+
+function seekAudio(value) {
+ if(audio.duration)
+  audio.currentTime=(value/100)*audio.duration;
+}
+
+function formatTime(seconds) {
+ if(!isFinite(seconds)) return "0:00";
+ let m=Math.floor(seconds/60);
+ let s=Math.floor(seconds%60);
+ return m+":"+String(s).padStart(2,"0");
+}
+
+audio.addEventListener("timeupdate",()=>{
+ document.getElementById("progress").value=
+ audio.duration?(audio.currentTime/audio.duration)*100:0;
+ document.getElementById("currentTime").innerText=formatTime(audio.currentTime);
+ document.getElementById("duration").innerText=formatTime(audio.duration);
+});
+
+audio.addEventListener("ended",()=>{
+ document.getElementById("playButton").innerText="▶";
+});
+
+document.getElementById("uploadFile").addEventListener("change",function(){
+ const file=this.files[0];
+ if(!file)return;
+
+ if(!file.type.startsWith("audio/")) {
+  alert("Please select a valid audio file.");
+  return;
+ }
+
+ if(currentBook && currentBook.audioUrl &&
+    currentBook.audioUrl.startsWith("blob:")) {
+   URL.revokeObjectURL(currentBook.audioUrl);
+ }
+
+ const url=URL.createObjectURL(file);
+
+ if(!currentBook) {
+  currentBook={
+   id:Date.now(),
+   title:file.name.replace(/\.[^/.]+$/,""),
+   author:"Your Upload",
+   emoji:"🎵"
+  };
+  books.push(currentBook);
+ }
+
+ currentBook.audioUrl=url;
+ document.getElementById("playerTitle").innerText=currentBook.title;
+ document.getElementById("playerAuthor").innerText="Your Audio";
+ audio.src=url;
+ audio.play().catch(()=>{});
+ document.getElementById("playButton").innerText="Ⅱ";
+});
+
+function toggleTheme() {
+ document.body.classList.toggle("dark");
+ localStorage.setItem("dark",document.body.classList.contains("dark"));
+}
+
+if(localStorage.getItem("dark")==="true")
+ document.body.classList.add("dark");
+
+function sleepTimer() {
+ let minutes=prompt("Sleep timer: kitne minutes? (Example: 15)");
+ if(minutes===null)return;
+ let value=Number(minutes);
+ if(!Number.isFinite(value)||value<=0||value>1440) {
+  alert("Please enter a valid number of minutes (1-1440).");
+  return;
+ }
+ setTimeout(()=>{
+  audio.pause();
+  document.getElementById("playButton").innerText="▶";
+  alert("Sleep timer finished!");
+ },value*60000);
+}
+
+renderBooks();
+</script>
+
+</body>
+</html>
